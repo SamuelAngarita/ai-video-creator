@@ -1,0 +1,20 @@
+{
+    "music": {
+        "enabled": true,
+        "url": "https://raw.githubusercontent.com/SamuelAngarita/ai-video-creator/main/Music/the-grey-room%20_%20density-and-time.mp4"
+    },
+    "images": [
+        {
+            "url": "https://raw.githubusercontent.com/SamuelAngarita/ai-video-creator/main/Images/house.jpg",
+             "transition": "zoom_in"
+        },
+        {
+            "url": "https://raw.githubusercontent.com/SamuelAngarita/ai-video-creator/main/Images/living-room.jpg",
+             "transition": "zoom_out"
+        },
+        {
+            "url": "https://raw.githubusercontent.com/SamuelAngarita/ai-video-creator/main/Images/kitchen.jpg",
+             "transition": "pan"
+        }
+    ]
+}
