@@ -6,7 +6,8 @@ echo Starting AI Video Creator with Docker...
 echo.
 
 REM Set your API key
-set GOOGLE_API_KEY=AIzaSyAN3wwudY6f480lldD2CRvRMA9OSZeWzkk
+REM IMPORTANT: Replace 'your_google_api_key_here' with your actual API key
+set GOOGLE_API_KEY=your_google_api_key_here
 
 REM Stop any running containers
 docker-compose down
