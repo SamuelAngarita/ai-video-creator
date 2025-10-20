@@ -184,6 +184,13 @@ Edita `Code/.work/input.json`:
 
 ## Cómo ejecutar (local)
 
+### Inicio rápido (Windows)
+```bash
+# ¡Solo haz doble clic en el archivo batch!
+run.bat
+```
+
+### Comandos manuales
 ```bash
 # 1. Configura primero tu clave API
 export GOOGLE_API_KEY=your_key_here  # Linux/Mac

@@ -1,33 +1,54 @@
-# Use the official Python image as the base
-FROM python:3.9-slim
+# Use the official Python image as the base (updated to Python 3.12)
+FROM python:3.12-slim
 
-# Install system dependencies including FFmpeg
-# Instalar dependencias del sistema incluyendo FFmpeg
+# Set environment variables for better Python performance
+# Establecer variables de entorno para mejor rendimiento de Python
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+# Install system dependencies including FFmpeg and other utilities
+# Instalar dependencias del sistema incluyendo FFmpeg y otras utilidades
 RUN apt-get update && \
-    apt-get install -y ffmpeg && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get install -y \
+        ffmpeg \
+        wget \
+        curl \
+        git \
+        && apt-get clean \
+        && rm -rf /var/lib/apt/lists/* \
+        && apt-get autoremove -y
+
+# Create app user for security
+# Crear usuario de aplicación para seguridad
+RUN groupadd -r appuser && useradd -r -g appuser appuser
 
 # Set the working directory inside the container
 # Establecer el directorio de trabajo dentro del contenedor
 WORKDIR /app
 
-# Copy the requirements file and install Python dependencies
-# Copiar archivo de requirements e instalar dependencias de Python
+# Copy requirements first for better Docker layer caching
+# Copiar requirements primero para mejor caché de capas de Docker
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+
+# Install Python dependencies with optimizations
+# Instalar dependencias de Python con optimizaciones
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
 # Copy your project files into the container
 # Copiar archivos del proyecto al contenedor
 COPY Code/ /app/Code/
 
-# Create the work directory for temporary files
-# Crear directorio de trabajo para archivos temporales
-RUN mkdir -p /app/Code/.work
+# Create necessary directories and set permissions
+# Crear directorios necesarios y establecer permisos
+RUN mkdir -p /app/Code/.work /app/Code/.work/normalized && \
+    chown -R appuser:appuser /app
 
-# Copy input.json from Code/.work directory
-# Copiar input.json desde directorio Code/.work
-COPY Code/.work/input.json /app/Code/.work/input.json
+# Switch to non-root user for security
+# Cambiar a usuario no-root por seguridad
+USER appuser
 
 # Set the default command to run your main Python script
 # Establecer comando por defecto para ejecutar tu script principal de Python

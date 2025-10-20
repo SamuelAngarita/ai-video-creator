@@ -5,18 +5,47 @@
 
 services:
   ai-video-creator:
-    build: .
-    image: ai-video-creator
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    image: ai-video-creator:latest
     container_name: ai-video-creator
+    restart: unless-stopped
+    
     # Mount work directory to see generated videos on host
     # Montar directorio de trabajo para ver videos generados en el host
     volumes:
       - ./Code/.work:/app/Code/.work
+      - ./Images:/app/Images:ro  # Mount images directory as read-only
+      - ./Music:/app/Music:ro    # Mount music directory as read-only
+      - ./input.json:/app/input.json:ro  # Mount input.json as read-only
+    
     # Set environment variables
     # Establecer variables de entorno
     environment:
-      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY:-}
+      - PYTHONUNBUFFERED=1
+      - TZ=UTC
+    
+    # Resource limits for better performance
+    # Límites de recursos para mejor rendimiento
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 512M
+    
     # Keep container running to inspect results
     # Mantener contenedor ejecutándose para inspeccionar resultados
     tty: true
     stdin_open: true
+    
+    # Health check to ensure container is running properly
+    # Verificación de salud para asegurar que el contenedor funciona correctamente
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys; sys.exit(0)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

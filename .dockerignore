@@ -3,14 +3,12 @@
 # English: Files and directories to exclude from Docker build context
 # Español: Archivos y directorios a excluir del contexto de construcción de Docker
 
-# Git and version control files
-# Archivos de Git y control de versiones
+# Git and version control
 .git
 .gitignore
 .gitattributes
 
 # Python cache and compiled files
-# Archivos de caché y compilados de Python
 __pycache__/
 *.py[cod]
 *$py.class
@@ -33,84 +31,61 @@ wheels/
 *.egg
 
 # Virtual environments
-# Entornos virtuales
 venv/
 env/
 ENV/
 env.bak/
 venv.bak/
-.venv/
 
 # IDE and editor files
-# Archivos de IDE y editores
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
+
+# OS generated files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 
-# Logs and temporary files
-# Archivos de logs y temporales
+# Logs
 *.log
-*.tmp
-*.temp
-.tmp/
+logs/
+
+# Temporary files
+tmp/
 temp/
+.tmp/
 
-# Work directory (will be created in container)
-# Directorio de trabajo (se creará en el contenedor)
-.work/
-# But keep input.json for Docker build
-# Pero mantener input.json para construcción de Docker
-!Code/.work/input.json
-
-# Output files (generated videos)
-# Archivos de salida (videos generados)
-*.mp4
-*.avi
-*.mov
-*.mkv
-*.webm
-
-# Documentation and readme files
-# Archivos de documentación y readme
+# Documentation
 README.md
+README(ESPAÑOL).md
 *.md
-docs/
+
+# Docker files (don't include in build context)
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Work directory (will be mounted as volume)
+Code/.work/
+
+# Large media files (will be mounted as volumes)
+Images/
+Music/
+
+# Environment files
+.env
+.env.local
+.env.*.local
 
 # Test files
-# Archivos de prueba
 test/
 tests/
 *_test.py
 test_*.py
-
-# Docker files (except Dockerfile)
-# Archivos de Docker (excepto Dockerfile)
-docker-compose.yml
-docker-compose.yaml
-.dockerignore
-
-# Environment and configuration files
-# Archivos de entorno y configuración
-.env
-.env.local
-.env.development
-.env.test
-.env.production
-config.local.py
-
-# Node.js files (if any)
-# Archivos de Node.js (si los hay)
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Backup files
-# Archivos de respaldo
-*.bak
-*.backup
-*.old

@@ -119,8 +119,8 @@ def _needs_normalize(files: list[Path]) -> bool:
         # any missing audio OR any difference in signatures -> normalize
         # cualquier audio faltante O cualquier diferencia en firmas -> normalizar
         if (not a_sig) or (v_sig != v_sig0) or (a_sig != a_sig0):
-        return True
-        return False
+            return True
+    return False
 
 # Parses FFmpeg concat list file and extracts video file paths for processing
 # Analiza archivo de lista de concatenación de FFmpeg y extrae rutas de archivos de video para procesamiento
@@ -131,9 +131,9 @@ def _parse_mylist(list_path: Path) -> list[Path]:
     if not list_path.exists():
         return files
     for line in list_path.read_text(encoding="utf-8").splitlines():
-            line = line.strip()
-            if not line or line.startswith("#"):
-                continue
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
         # Match ffmpeg concat format: file 'path/to/video.mp4'
         # Coincidir formato de concatenación de ffmpeg: file 'ruta/al/video.mp4'
         m = re.match(r"file\s+'(.+)'", line)
@@ -191,26 +191,26 @@ def create_txt(num: int):
 
     files = _find_input_clips()
     if len(files) != num:
-            print(f"Found {len(files)} AI videos but expected {num}/ Encontrados {len(files)} videos IA pero se esperaban {num}. Using existing videos only.")
-        if not files:
-            print("No AI videos found - creating dummy videos/ No se encontraron videos IA - creando videos ficticios")
-            # Create dummy videos for testing
-            # Crear videos dummy para pruebas
-            for i in range(1, num + 1):
-                dummy_file = WORKDIR / f"AIvideo{i}.mp4"
-                if not dummy_file.exists():
-                    import subprocess
-                    # Generate 2-second black video as placeholder
-                    # Generar video negro de 2 segundos como marcador de posición
-                    cmd = [
-                        "ffmpeg", "-y", "-f", "lavfi", 
-                        "-i", f"color=black:size=1920x1080:duration=2",
-                        "-c:v", "libx264", "-preset", "fast", 
-                        str(dummy_file)
-                    ]
-                    subprocess.run(cmd, check=True, capture_output=True)
-                    print(f"Dummy video created/ Video ficticio creado: {dummy_file}")
-            files = _find_input_clips()
+        print(f"Found {len(files)} AI videos but expected {num}/ Encontrados {len(files)} videos IA pero se esperaban {num}. Using existing videos only.")
+    if not files:
+        print("No AI videos found - creating dummy videos/ No se encontraron videos IA - creando videos ficticios")
+        # Create dummy videos for testing
+        # Crear videos dummy para pruebas
+        for i in range(1, num + 1):
+            dummy_file = WORKDIR / f"AIvideo{i}.mp4"
+            if not dummy_file.exists():
+                import subprocess
+                # Generate 2-second black video as placeholder
+                # Generar video negro de 2 segundos como marcador de posición
+                cmd = [
+                    "ffmpeg", "-y", "-f", "lavfi", 
+                    "-i", f"color=black:size=1920x1080:duration=2",
+                    "-c:v", "libx264", "-preset", "fast", 
+                    str(dummy_file)
+                ]
+                subprocess.run(cmd, check=True, capture_output=True)
+                print(f"Dummy video created/ Video ficticio creado: {dummy_file}")
+        files = _find_input_clips()
     _write_list_for(files, MYLIST_TXT)
 
 
@@ -257,9 +257,9 @@ def _normalize_clips(src_files: list[Path]) -> list[Path]:
         else:
             # Inject silent audio for videos without audio
             # Inyectar audio silencioso para videos sin audio
-    cmd = [
-        "ffmpeg",
-        "-y",
+            cmd = [
+                "ffmpeg",
+                "-y",
                 "-hide_banner", "-loglevel", "error",
                 "-i", str(src),
                 "-f", "lavfi", "-i", f"anullsrc=r={TARGET_AR}:cl=stereo",
@@ -326,7 +326,7 @@ def combine_videos():
         try:
             _run(cmd_norm_copy)
             print(f"Videos concatenated/ Videos concatenados: {MERGED_OUT}")
-        return
+            return
         except RuntimeError:
             print("Concat after normalization failed - using filter/ Concatenación después de normalización falló - usando filtro")
             # Fall through to concat filter on normalized clips
@@ -347,7 +347,7 @@ def combine_videos():
         try:
             _run(cmd_fast)
             print(f"Videos concatenated/ Videos concatenados: {MERGED_OUT}")
-        return
+            return
         except RuntimeError:
             print("Fast concat failed - normalizing clips/ Concatenación rápida falló - normalizando clips")
             files = _normalize_clips(files)                                      

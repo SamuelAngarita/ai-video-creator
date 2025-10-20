@@ -169,6 +169,13 @@ Edit `Code/.work/input.json`:
 
 ## How to Run (Local)
 
+### Quick Start (Windows)
+```bash
+# Just double-click the batch file!
+run.bat
+```
+
+### Manual Commands
 ```bash
 # 1. Set up your API key first
 export GOOGLE_API_KEY=your_key_here  # Linux/Mac

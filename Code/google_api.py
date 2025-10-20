@@ -25,7 +25,7 @@ if API_KEY:
         client = genai.Client(api_key=API_KEY)
         print("API key loaded/ Clave API cargada: yes")
     except ImportError:
-        print("Google AI libraries not installed/ Librerías de Google AI no instaladas. Install with: pip install google-genai")
+        print("Google AI libraries not installed/ Librerías de Google AI no instaladas. Install with: pip install google-generativeai")
         client = None
 else:
     print("API key not set - Google AI features disabled/ Clave API no configurada - funciones de Google AI deshabilitadas")
