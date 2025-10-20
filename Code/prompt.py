@@ -1,3 +1,4 @@
+#prompt.py
 def get_prompt(transition:str)-> str:
 
     if transition == "zoom_in":
@@ -20,6 +21,8 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+    
 
 
     

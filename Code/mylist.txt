@@ -1,3 +1,0 @@
-file '.work/video1.mp4'
-file '.work/video2.mp4'
-file '.work/video3.mp4'
