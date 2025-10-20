@@ -4,18 +4,21 @@
 # Español: Orquestador principal del pipeline para creación de videos IA desde imágenes, prompts y música
 
 import json
-from config import PROJECT_ROOT, workdir 
+from config import PROJECT_ROOT, workdir
 from read import download_image, download_song
 from google_api import calling_veo
 from prompt import get_prompt
 from combine import ensure_ffmpeg_available, create_txt, combine_videos, add_music
 
+
+# Main pipeline function that orchestrates the entire AI video creation process
+# Función principal del pipeline que orquesta todo el proceso de creación de videos IA
 def main():
     # Main pipeline function that orchestrates the entire video creation process
     # Función principal del pipeline que orquesta todo el proceso de creación de video
     # Read input.json FROM Code/.work instead of Code/
     # Leer input.json DESDE Code/.work en lugar de Code/
-    with open(workdir / "input.json", "r", encoding="utf-8") as f:          #################################################################################
+    with open(workdir / "input.json", "r", encoding="utf-8") as f:
         data = json.load(f)
 
     # Download all images from URLs specified in input.json
@@ -33,13 +36,13 @@ def main():
     # Llamada principal de google_api.py
     # Start enumerate at 1 so index matches your filenames (downloaded_image1.jpg, AIvideo1.mp4, ...)
     # Comenzar enumeración en 1 para que el índice coincida con nombres de archivo (downloaded_image1.jpg, AIvideo1.mp4, ...)
-    for y, tran in enumerate(data["images"], start=1):                       #################################################################################
+    for y, tran in enumerate(data["images"], start=1):
         try:
             # Use workdir for image path, not a hard-coded ".work"
             # Usar workdir para ruta de imagen, no un ".work" codificado
-            result = calling_veo(                                            #################################################################################
+            result = calling_veo(
                 get_prompt(tran["transition"]),
-                str(workdir / f"downloaded_image{y}.jpg"),                   #################################################################################
+                str(workdir / f"downloaded_image{y}.jpg"),
                 y
             )
             print(f"[demo] success: {result}")
@@ -76,4 +79,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

@@ -25,18 +25,5 @@ def get_prompt(transition:str)-> str:
         raise SystemExit(f"Error: unknown command '{transition}'. Allowed: zoom_in, zoom_out, pan")
     
 
-# -------- tiny demo main ------------------------------------------------------
-def main():
-    # Demo function to test prompt generation
-    # Función demo para probar generación de prompts
-    
-    print(get_prompt("zoom_in"))
-
-
-if __name__ == "__main__":
-    main()
-
-    
-
-
-    
+# Demo function removed for production use
+# Función demo removida para uso en producción

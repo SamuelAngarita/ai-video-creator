@@ -7,14 +7,11 @@ import subprocess
 from pathlib import Path
 import shutil
 import re
-import os
 
-# ------------------------------
-# Robust paths & folders
-# ------------------------------
+
 # Import centralized work directory from config module
 # Importar directorio de trabajo centralizado desde el módulo de configuración
-from config import workdir as WORKDIR                                       #################################################################################
+from config import workdir as WORKDIR
 # Ensure work directory exists before proceeding
 # Asegurar que el directorio de trabajo existe antes de continuar
 WORKDIR.mkdir(parents=True, exist_ok=True)
@@ -28,41 +25,45 @@ MUSIC_IN     = WORKDIR / "downloaded_music.mp4"  # matches read.download_song()
 
 # Normalization settings & outputs
 # Configuraciones de normalización y salidas
-TARGET_W     = 1920                                                             #################################################################################
-TARGET_H     = 1080                                                             #################################################################################
-TARGET_FPS   = 30                                                               #################################################################################
-TARGET_AR    = 48000  # audio sample rate                                       #################################################################################
-TARGET_AC    = 2      # audio channels                                          #################################################################################
-NORM_DIR     = WORKDIR / "normalized"                                           #################################################################################
-MYLIST_NORM  = WORKDIR / "mylist_normalized.txt"                                #################################################################################
+TARGET_W     = 1920
+TARGET_H     = 1080
+TARGET_FPS   = 30
+TARGET_AR    = 48000  # audio sample rate
+TARGET_AC    = 2      # audio channels
+NORM_DIR     = WORKDIR / "normalized"
+MYLIST_NORM  = WORKDIR / "mylist_normalized.txt"
 
+
+# Executes subprocess commands with error handling and user-friendly error messages
+# Ejecuta comandos de subproceso con manejo de errores y mensajes de error amigables
 def _run(cmd: list[str]):
     """Run a command and raise with a short, friendly message on failure."""
     # Execute subprocess command with error handling
     # Ejecutar comando de subproceso con manejo de errores
     try:
-        res = subprocess.run(cmd, check=True, capture_output=True, text=True)   #################################################################################
+        res = subprocess.run(cmd, check=True, capture_output=True, text=True)   
         return res
     except subprocess.CalledProcessError as e:
         # Extract last error line for user-friendly message
         # Extraer última línea de error para mensaje amigable al usuario
-        err = (e.stderr or "").strip().splitlines()[-1:]                        #################################################################################
+        err = (e.stderr or "").strip().splitlines()[-1:]
         hint = f" ({err[0]})" if err else ""
-        raise RuntimeError(f"Command failed: {' '.join(cmd[:3])}...{hint}") from e  #################################################################################
+        raise RuntimeError(f"Command failed: {' '.join(cmd[:3])}...{hint}") from e
 
+# Verifies that FFmpeg and FFprobe are installed and available in system PATH
+# Verifica que FFmpeg y FFprobe estén instalados y disponibles en el PATH del sistema
 def ensure_ffmpeg_available():
     # Check if ffmpeg and ffprobe are available on system PATH
     # Verificar si ffmpeg y ffprobe están disponibles en el PATH del sistema
     if shutil.which("ffmpeg") is None:
         raise SystemExit("ffmpeg not found on PATH. Please install ffmpeg.")
-    if shutil.which("ffprobe") is None:                                         #################################################################################
-        raise SystemExit("ffprobe not found on PATH. Please install ffmpeg.")   #################################################################################
-    print("[ok] ffmpeg/ffprobe are available")                                  #################################################################################
+    if shutil.which("ffprobe") is None:
+        raise SystemExit("ffprobe not found on PATH. Please install ffmpeg.")
+    print("[ok] ffmpeg/ffprobe are available")
 
-# ------------------------------
-# Preflight with ffprobe (NEW)
-# ------------------------------
-def _ffprobe_csv(path: Path, stream: str, fields: list[str]) -> str:            #################################################################################
+# Extracts specific video/audio stream information using FFprobe in CSV format
+# Extrae información específica de streams de video/audio usando FFprobe en formato CSV
+def _ffprobe_csv(path: Path, stream: str, fields: list[str]) -> str:
     """
     Return a CSV line of requested fields for the first matching stream.
     Empty string means the stream is missing (e.g., no audio).
@@ -80,7 +81,10 @@ def _ffprobe_csv(path: Path, stream: str, fields: list[str]) -> str:            
     res = subprocess.run(cmd, capture_output=True, text=True)
     return (res.stdout or "").strip()
 
-def _needs_normalize(files: list[Path]) -> bool:                                #################################################################################
+
+# Determines if video clips need normalization before concatenation based on stream compatibility
+# Determina si los clips de video necesitan normalización antes de la concatenación basado en compatibilidad de streams
+def _needs_normalize(files: list[Path]) -> bool:
     """
     Decide if we must normalize BEFORE concat:
       - any file missing audio
@@ -94,13 +98,13 @@ def _needs_normalize(files: list[Path]) -> bool:                                
 
     # Define video and audio properties to check for consistency
     # Definir propiedades de video y audio para verificar consistencia
-    v_fields = ["codec_name", "width", "height", "pix_fmt", "sample_aspect_ratio", "avg_frame_rate"]  #################################################################################
-    a_fields = ["codec_name", "sample_rate", "channels"]                                              #################################################################################
+    v_fields = ["codec_name", "width", "height", "pix_fmt", "sample_aspect_ratio", "avg_frame_rate"]  
+    a_fields = ["codec_name", "sample_rate", "channels"]
 
     # Get reference properties from first file
     # Obtener propiedades de referencia del primer archivo
-    v_sig0 = _ffprobe_csv(files[0], "v:0", v_fields)                                                  #################################################################################
-    a_sig0 = _ffprobe_csv(files[0], "a:0", a_fields)                                                  #################################################################################
+    v_sig0 = _ffprobe_csv(files[0], "v:0", v_fields)
+    a_sig0 = _ffprobe_csv(files[0], "a:0", a_fields)
 
     # If first clip has no audio, we will normalize to inject silent audio
     # Si el primer clip no tiene audio, normalizaremos para inyectar audio silencioso
@@ -114,23 +118,22 @@ def _needs_normalize(files: list[Path]) -> bool:                                
         a_sig = _ffprobe_csv(f, "a:0", a_fields)
         # any missing audio OR any difference in signatures -> normalize
         # cualquier audio faltante O cualquier diferencia en firmas -> normalizar
-        if (not a_sig) or (v_sig != v_sig0) or (a_sig != a_sig0):                                     #################################################################################
-            return True
-    return False
+        if (not a_sig) or (v_sig != v_sig0) or (a_sig != a_sig0):
+        return True
+        return False
 
-# ------------------------------
-# Helpers
-# ------------------------------
-def _parse_mylist(list_path: Path) -> list[Path]:                               #################################################################################
+# Parses FFmpeg concat list file and extracts video file paths for processing
+# Analiza archivo de lista de concatenación de FFmpeg y extrae rutas de archivos de video para procesamiento
+def _parse_mylist(list_path: Path) -> list[Path]:
     # Parse ffmpeg concat list file to extract video file paths
     # Analizar archivo de lista de concatenación de ffmpeg para extraer rutas de archivos de video
     files = []
     if not list_path.exists():
         return files
     for line in list_path.read_text(encoding="utf-8").splitlines():
-        line = line.strip()
-        if not line or line.startswith("#"):
-            continue
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
         # Match ffmpeg concat format: file 'path/to/video.mp4'
         # Coincidir formato de concatenación de ffmpeg: file 'ruta/al/video.mp4'
         m = re.match(r"file\s+'(.+)'", line)
@@ -138,6 +141,8 @@ def _parse_mylist(list_path: Path) -> list[Path]:                               
             files.append(Path(m.group(1)))
     return files
 
+# Scans work directory for AI-generated video files and returns them sorted by index
+# Escanea directorio de trabajo para archivos de video generados por IA y los devuelve ordenados por índice
 def _find_input_clips() -> list[Path]:
     # Scan work directory for AI-generated video files
     # Escanear directorio de trabajo para archivos de video generados por IA
@@ -165,14 +170,13 @@ def _write_list_for(files, list_path: Path):
     list_path.write_text("\n".join(lines), encoding="utf-8")
     print(f"[ok] wrote list: {list_path}")
 
-def _has_audio(src: Path) -> bool:                                              #################################################################################
+def _has_audio(src: Path) -> bool:
     # Check if video file contains audio stream
     # Verificar si el archivo de video contiene stream de audio
-    return bool(_ffprobe_csv(src, "a:0", ["codec_name"]))                        #################################################################################
+    return bool(_ffprobe_csv(src, "a:0", ["codec_name"]))
 
-# ------------------------------
-# Public API
-# ------------------------------
+# Creates FFmpeg concat list file for video concatenation with fallback to dummy videos
+# Crea archivo de lista de concatenación de FFmpeg para concatenación de videos con respaldo a videos ficticios
 def create_txt(num: int):
     """
     Build concat list for ffmpeg demuxer:
@@ -209,6 +213,9 @@ def create_txt(num: int):
             files = _find_input_clips()
     _write_list_for(files, MYLIST_TXT)
 
+
+# Normalizes video clips to consistent format (resolution, FPS, audio) for reliable concatenation
+# Normaliza clips de video a formato consistente (resolución, FPS, audio) para concatenación confiable
 def _normalize_clips(src_files: list[Path]) -> list[Path]:
     """
     Normalize each clip to consistent canvas (WxH), CFR fps, SAR=1:1, yuv420p,
@@ -231,9 +238,9 @@ def _normalize_clips(src_files: list[Path]) -> list[Path]:
             f"scale={TARGET_W}:{TARGET_H}:force_original_aspect_ratio=decrease,"
             f"pad={TARGET_W}:{TARGET_H}:(ow-iw)/2:(oh-ih)/2:color=black,"
             f"setsar=1,fps={TARGET_FPS},format=yuv420p"
-        )                                                                        #################################################################################
+        )
 
-        if _has_audio(src):                                                      #################################################################################
+        if _has_audio(src):
             # Process video with existing audio
             # Procesar video con audio existente
             cmd = [
@@ -250,14 +257,14 @@ def _normalize_clips(src_files: list[Path]) -> list[Path]:
         else:
             # Inject silent audio for videos without audio
             # Inyectar audio silencioso para videos sin audio
-            cmd = [
-                "ffmpeg",
-                "-y",
+    cmd = [
+        "ffmpeg",
+        "-y",
                 "-hide_banner", "-loglevel", "error",
                 "-i", str(src),
-                "-f", "lavfi", "-i", f"anullsrc=r={TARGET_AR}:cl=stereo",       #################################################################################
+                "-f", "lavfi", "-i", f"anullsrc=r={TARGET_AR}:cl=stereo",
                 "-vf", vf,
-                "-map", "0:v:0", "-map", "1:a:0",                                #################################################################################
+                "-map", "0:v:0", "-map", "1:a:0",
                 "-c:v", "libx264", "-preset", "medium", "-crf", "20",
                 "-c:a", "aac", "-ar", str(TARGET_AR), "-ac", str(TARGET_AC),
                 "-shortest",
@@ -272,6 +279,9 @@ def _normalize_clips(src_files: list[Path]) -> list[Path]:
     _write_list_for(norm_files, MYLIST_NORM)
     return norm_files
 
+
+# Combines multiple video clips into single merged video using smart concatenation strategy
+# Combina múltiples clips de video en un solo video fusionado usando estrategia de concatenación inteligente
 def combine_videos():
     """
     Strategy:
@@ -288,7 +298,7 @@ def combine_videos():
     # Build/validate list
     # Construir/validar lista
     if MYLIST_TXT.exists():
-        files = _parse_mylist(MYLIST_TXT)                                       #################################################################################
+        files = _parse_mylist(MYLIST_TXT)
     else:
         files = _find_input_clips()
         if files:
@@ -299,9 +309,9 @@ def combine_videos():
 
     # --- PRE-FLIGHT: skip fast path if streams differ ---
     # --- PRE-VUELO: omitir ruta rápida si los streams difieren ---
-    if _needs_normalize(files):                                                  #################################################################################
-        print("[info] Stream parameters differ (or audio missing). Normalizing first...") #################################################################################
-        norm_files = _normalize_clips(files)                                     #################################################################################
+    if _needs_normalize(files):                                                  
+        print("[info] Stream parameters differ (or audio missing). Normalizing first...") 
+        norm_files = _normalize_clips(files)                                     
         # Try fast concatenation after normalization
         # Intentar concatenación rápida después de normalización
         cmd_norm_copy = [
@@ -316,12 +326,12 @@ def combine_videos():
         try:
             _run(cmd_norm_copy)
             print(f"[ok] concatenated normalized -> {MERGED_OUT}")
-            return
+        return
         except RuntimeError:
             print("[warn] concat after normalization failed; using concat FILTER ...")
             # Fall through to concat filter on normalized clips
             # Continuar con filtro de concatenación en clips normalizados
-            files = norm_files                                                  #################################################################################
+            files = norm_files                                                  
     else:
         # --- 1) Fast path: concat demuxer (no re-encode) ---
         # --- 1) Ruta rápida: demuxer de concatenación (sin re-codificación) ---
@@ -337,10 +347,10 @@ def combine_videos():
         try:
             _run(cmd_fast)
             print(f"[ok] concatenated -> {MERGED_OUT}")
-            return
+        return
         except RuntimeError:
             print("[warn] fast concat failed; normalizing clips then retrying ...")
-            files = _normalize_clips(files)                                      #################################################################################
+            files = _normalize_clips(files)                                      
 
     # --- 3) Last resort: concat filter (re-encode once) ---
     # --- 3) Último recurso: filtro de concatenación (re-codificar una vez) ---
@@ -353,7 +363,7 @@ def combine_videos():
 
     # For normalized files we know 1v/1a per input
     # Para archivos normalizados sabemos 1v/1a por entrada
-    filter_graph = "".join(f"[{i}:v:0][{i}:a:0]" for i in range(n)) + f"concat=n={n}:v=1:a=1[outv][outa]" #################################################################################
+    filter_graph = "".join(f"[{i}:v:0][{i}:a:0]" for i in range(n)) + f"concat=n={n}:v=1:a=1[outv][outa]" 
 
     cmd_concat_filter = [
         "ffmpeg",
@@ -370,6 +380,9 @@ def combine_videos():
     _run(cmd_concat_filter)
     print(f"[ok] concatenated (concat filter) -> {MERGED_OUT}")
 
+
+# Adds background music to merged video or copies video without music if music file is missing
+# Añade música de fondo al video fusionado o copia video sin música si falta el archivo de música
 def add_music():
     """
     Replace audio on merged video using the downloaded music.
@@ -406,3 +419,5 @@ def add_music():
     ]
     _run(cmd)
     print(f"[ok] music added -> {FINAL_OUT}")
+
+

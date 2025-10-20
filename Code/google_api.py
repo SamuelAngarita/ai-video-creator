@@ -29,6 +29,9 @@ else:
     print("[veo] API key not set - Google AI features disabled")
     client = None
 
+
+# Generates AI video using Google Veo API with fallback to dummy video on failure
+# Genera video IA usando la API de Google Veo con respaldo a video ficticio en caso de fallo
 def calling_veo(prompt: str, image_path: str, index: int) -> Path:
     """
     Generate AI video using Google Veo API.
