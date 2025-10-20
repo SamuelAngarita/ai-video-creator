@@ -1,0 +1,116 @@
+# .dockerignore
+# Samuel Angarita
+# English: Files and directories to exclude from Docker build context
+# Español: Archivos y directorios a excluir del contexto de construcción de Docker
+
+# Git and version control files
+# Archivos de Git y control de versiones
+.git
+.gitignore
+.gitattributes
+
+# Python cache and compiled files
+# Archivos de caché y compilados de Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+# Entornos virtuales
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# IDE and editor files
+# Archivos de IDE y editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Logs and temporary files
+# Archivos de logs y temporales
+*.log
+*.tmp
+*.temp
+.tmp/
+temp/
+
+# Work directory (will be created in container)
+# Directorio de trabajo (se creará en el contenedor)
+.work/
+# But keep input.json for Docker build
+# Pero mantener input.json para construcción de Docker
+!Code/.work/input.json
+
+# Output files (generated videos)
+# Archivos de salida (videos generados)
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.webm
+
+# Documentation and readme files
+# Archivos de documentación y readme
+README.md
+*.md
+docs/
+
+# Test files
+# Archivos de prueba
+test/
+tests/
+*_test.py
+test_*.py
+
+# Docker files (except Dockerfile)
+# Archivos de Docker (excepto Dockerfile)
+docker-compose.yml
+docker-compose.yaml
+.dockerignore
+
+# Environment and configuration files
+# Archivos de entorno y configuración
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+config.local.py
+
+# Node.js files (if any)
+# Archivos de Node.js (si los hay)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Backup files
+# Archivos de respaldo
+*.bak
+*.backup
+*.old

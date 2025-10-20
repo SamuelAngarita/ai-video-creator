@@ -1,0 +1,22 @@
+# docker-compose.yml
+# Samuel Angarita
+# English: Docker Compose configuration for AI video creator
+# Español: Configuración de Docker Compose para creador de videos IA
+
+services:
+  ai-video-creator:
+    build: .
+    image: ai-video-creator
+    container_name: ai-video-creator
+    # Mount work directory to see generated videos on host
+    # Montar directorio de trabajo para ver videos generados en el host
+    volumes:
+      - ./Code/.work:/app/Code/.work
+    # Set environment variables
+    # Establecer variables de entorno
+    environment:
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY:-AIzaSyDP5q2gFxX6mOBpIFLai8yzBN50bE41OtE}
+    # Keep container running to inspect results
+    # Mantener contenedor ejecutándose para inspeccionar resultados
+    tty: true
+    stdin_open: true

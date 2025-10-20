@@ -1,0 +1,30 @@
+# requirements.txt
+# Samuel Angarita
+# English: Python dependencies for AI video creator project
+# Español: Dependencias de Python para el proyecto creador de videos IA
+
+# Core HTTP and image processing libraries
+# Bibliotecas principales de HTTP y procesamiento de imágenes
+requests>=2.31.0
+Pillow>=10.0.0
+
+# Google AI/GenAI libraries for Veo API
+# Bibliotecas de Google AI/GenAI para API Veo
+google-genai>=0.3.0
+
+# Path and file handling (built-in, but listed for completeness)
+# Manejo de rutas y archivos (integrado, pero listado para completitud)
+pathlib2>=2.3.7; python_version < "3.4"
+
+# Note: ffmpeg is a system dependency, not a Python package
+# Nota: ffmpeg es una dependencia del sistema, no un paquete de Python
+# Install via: apt-get install ffmpeg (Ubuntu/Debian) or brew install ffmpeg (macOS)
+# Instalar via: apt-get install ffmpeg (Ubuntu/Debian) o brew install ffmpeg (macOS)
+
+# Optional: For better subprocess handling and progress bars
+# Opcional: Para mejor manejo de subprocesos y barras de progreso
+tqdm>=4.65.0
+
+# Optional: For enhanced error handling and logging
+# Opcional: Para manejo mejorado de errores y logging
+colorama>=0.4.6

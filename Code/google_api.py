@@ -8,9 +8,9 @@ import time
 from pathlib import Path
 from config import workdir
 
-# Simple API key setup - replace "TYPE_KEY_HERE" with your actual API key
-# Configuración simple de clave API - reemplazar "TYPE_KEY_HERE" con tu clave API real
-API_KEY = "TYPE_KEY_HERE"  # Replace this with your actual Google API key
+# API key setup - check environment variable first, then fallback to hardcoded
+# Configuración de clave API - verificar variable de entorno primero, luego respaldo codificado
+API_KEY = os.getenv("GOOGLE_API_KEY", "AIzaSyDP5q2gFxX6mOBpIFLai8yzBN50bE41OtE")
 
 # Only import and initialize if API key is set
 # Solo importar e inicializar si la clave API está configurada
