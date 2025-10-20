@@ -86,6 +86,11 @@ ai-video-creator/
 3. Escribe: `./setup.sh` y presiona Enter
 4. Pega tu clave de API cuando se te solicite
 
+**⚠️ NOTA IMPORTANTE DE SEGURIDAD:**
+- Nunca pongas tu clave de API real en los archivos `run.bat` o `run-docker.bat`
+- Estos archivos contienen texto placeholder `your_google_api_key_here` - reemplázalo con tu clave real
+- Tu clave de API solo debe configurarse como variable de entorno o a través de los scripts de configuración
+
 ### Paso 5: Edita la configuración de tu video
 
 1. Abre el archivo `Code/.work/input.json` con cualquier editor de texto
@@ -95,10 +100,21 @@ ai-video-creator/
 
 ### Paso 6: Ejecuta la aplicación
 
+**Opción A: Usando Docker (Recomendado)**
 1. Abre la terminal/Command Prompt en la carpeta del proyecto
 2. Escribe: `docker-compose up --build`
 3. Espera a que termine (la primera vez puede tardar unos minutos)
 4. Tu video se guardará como `Code/.work/Final.mp4`
+
+**Opción B: Usando archivos batch (Windows)**
+1. Edita `run.bat` y reemplaza `your_google_api_key_here` con tu clave de API real
+2. Haz doble clic en `run.bat` para ejecutar localmente
+3. Tu video se guardará como `Code/.work/Final.mp4`
+
+**Opción C: Usando archivo batch de Docker (Windows)**
+1. Edita `run-docker.bat` y reemplaza `your_google_api_key_here` con tu clave de API real
+2. Haz doble clic en `run-docker.bat` para ejecutar con Docker
+3. Tu video se guardará como `Code/.work/Final.mp4`
 
 **¡Eso es todo! ¡Ya tienes un video generado con IA! 🎉**
 
@@ -186,8 +202,12 @@ Edita `Code/.work/input.json`:
 
 ### Inicio rápido (Windows)
 ```bash
-# ¡Solo haz doble clic en el archivo batch!
+# 1. Primero, edita run.bat y reemplaza 'your_google_api_key_here' con tu clave de API real
+# 2. ¡Luego haz doble clic en el archivo batch!
 run.bat
+
+# O para Docker:
+run-docker.bat
 ```
 
 ### Comandos manuales
@@ -225,7 +245,7 @@ docker-compose up --build
 docker build -t ai-video-creator .
 
 # Ejecuta con montaje de volumen (para acceder a los archivos de salida)
-docker run --rm -it \
+docker run --rm \
   -v "$PWD/Code/.work:/app/Code/.work" \
   -e GOOGLE_API_KEY=your_key_here \
   ai-video-creator
@@ -238,7 +258,7 @@ docker run --rm -it \
 nano Code/.work/input.json
 
 # Método 2: Monta tu entrada personalizada
-docker run --rm -it \
+docker run --rm \
   -v "$PWD/my-custom-input.json:/app/Code/.work/input.json" \
   -v "$PWD/Code/.work:/app/Code/.work" \
   -e GOOGLE_API_KEY=your_key_here \
