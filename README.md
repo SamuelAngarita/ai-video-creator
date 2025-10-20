@@ -50,7 +50,7 @@ ai-video-creator/
 **Follow these steps exactly to get your AI video creator running:**
 
 ### Step 1: Download the Project
-1. Go to: https://github.com/yourusername/ai-video-creator
+1. Go to: https://github.com/SamuelAngarita/ai-video-creator
 2. Click the green **"Code"** button
 3. Click **"Download ZIP"**
 4. Extract the ZIP file to your desktop
@@ -99,7 +99,7 @@ ai-video-creator/
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/ai-video-creator.git
+git clone https://github.com/SamuelAngarita/ai-video-creator.git
 cd ai-video-creator
 
 # Create virtual environment
@@ -307,7 +307,7 @@ docker logs ai-video-creator
 ---
 
 **Maintainer:** Samuel Angarita  
-**Repository:** https://github.com/yourusername/ai-video-creator  
+**Repository:** https://github.com/SamuelAngarita/ai-video-creator  
 **License:** MIT
 
 For issues and contributions, please open an issue on GitHub.

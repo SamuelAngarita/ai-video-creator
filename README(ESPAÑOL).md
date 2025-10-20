@@ -52,7 +52,7 @@ ai-video-creator/
 
 ### Paso 1: Descarga el proyecto
 
-1. Ve a: [https://github.com/yourusername/ai-video-creator](https://github.com/yourusername/ai-video-creator)
+1. Ve a: [https://github.com/SamuelAngarita/ai-video-creator](https://github.com/SamuelAngarita/ai-video-creator)
 2. Haz clic en el botón verde **"Code"**
 3. Haz clic en **"Download ZIP"**
 4. Extrae el archivo ZIP en tu escritorio
@@ -108,7 +108,7 @@ ai-video-creator/
 
 ```bash
 # Clona el repositorio
-git clone https://github.com/yourusername/ai-video-creator.git
+git clone https://github.com/SamuelAngarita/ai-video-creator.git
 cd ai-video-creator
 
 # Crea un entorno virtual
@@ -332,7 +332,7 @@ docker logs ai-video-creator
 ---
 
 **Mantenedor:** Samuel Angarita
-**Repositorio:** [https://github.com/yourusername/ai-video-creator](https://github.com/yourusername/ai-video-creator)
+**Repositorio:** [https://github.com/SamuelAngarita/ai-video-creator](https://github.com/SamuelAngarita/ai-video-creator)
 **Licencia:** MIT
 
 Para incidencias y contribuciones, por favor abre un *issue* en GitHub.
