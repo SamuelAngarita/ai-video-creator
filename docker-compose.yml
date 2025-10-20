@@ -15,7 +15,7 @@ services:
     # Set environment variables
     # Establecer variables de entorno
     environment:
-      - GOOGLE_API_KEY=${GOOGLE_API_KEY:-AIzaSyDP5q2gFxX6mOBpIFLai8yzBN50bE41OtE}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
     # Keep container running to inspect results
     # Mantener contenedor ejecutándose para inspeccionar resultados
     tty: true

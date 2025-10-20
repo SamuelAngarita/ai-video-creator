@@ -59,7 +59,7 @@ def ensure_ffmpeg_available():
         raise SystemExit("ffmpeg not found on PATH. Please install ffmpeg.")
     if shutil.which("ffprobe") is None:
         raise SystemExit("ffprobe not found on PATH. Please install ffmpeg.")
-    print("[ok] ffmpeg/ffprobe are available")
+    print("FFmpeg tools available/ Herramientas FFmpeg disponibles")
 
 # Extracts specific video/audio stream information using FFprobe in CSV format
 # Extrae información específica de streams de video/audio usando FFprobe en formato CSV
@@ -168,7 +168,7 @@ def _write_list_for(files, list_path: Path):
         s = str(f).replace("'", r"'\''")
         lines.append(f"file '{s}'")
     list_path.write_text("\n".join(lines), encoding="utf-8")
-    print(f"[ok] wrote list: {list_path}")
+    print(f"List file created/ Archivo de lista creado: {list_path}")
 
 def _has_audio(src: Path) -> bool:
     # Check if video file contains audio stream
@@ -191,9 +191,9 @@ def create_txt(num: int):
 
     files = _find_input_clips()
     if len(files) != num:
-        print(f"[warn] Found {len(files)} AI videos but expected {num}. Using existing videos only.")
+            print(f"Found {len(files)} AI videos but expected {num}/ Encontrados {len(files)} videos IA pero se esperaban {num}. Using existing videos only.")
         if not files:
-            print("[error] No AI videos found. Creating dummy videos for testing...")
+            print("No AI videos found - creating dummy videos/ No se encontraron videos IA - creando videos ficticios")
             # Create dummy videos for testing
             # Crear videos dummy para pruebas
             for i in range(1, num + 1):
@@ -209,7 +209,7 @@ def create_txt(num: int):
                         str(dummy_file)
                     ]
                     subprocess.run(cmd, check=True, capture_output=True)
-                    print(f"[ok] Created dummy video: {dummy_file}")
+                    print(f"Dummy video created/ Video ficticio creado: {dummy_file}")
             files = _find_input_clips()
     _write_list_for(files, MYLIST_TXT)
 
@@ -274,7 +274,7 @@ def _normalize_clips(src_files: list[Path]) -> list[Path]:
 
         _run(cmd)
         norm_files.append(dst)
-        print(f"[ok] normalized -> {dst}")
+        print(f"Video normalized/ Video normalizado: {dst}")
 
     _write_list_for(norm_files, MYLIST_NORM)
     return norm_files
@@ -310,7 +310,7 @@ def combine_videos():
     # --- PRE-FLIGHT: skip fast path if streams differ ---
     # --- PRE-VUELO: omitir ruta rápida si los streams difieren ---
     if _needs_normalize(files):                                                  
-        print("[info] Stream parameters differ (or audio missing). Normalizing first...") 
+        print("Stream parameters differ - normalizing first/ Parámetros de stream difieren - normalizando primero") 
         norm_files = _normalize_clips(files)                                     
         # Try fast concatenation after normalization
         # Intentar concatenación rápida después de normalización
@@ -325,10 +325,10 @@ def combine_videos():
         ]
         try:
             _run(cmd_norm_copy)
-            print(f"[ok] concatenated normalized -> {MERGED_OUT}")
+            print(f"Videos concatenated/ Videos concatenados: {MERGED_OUT}")
         return
         except RuntimeError:
-            print("[warn] concat after normalization failed; using concat FILTER ...")
+            print("Concat after normalization failed - using filter/ Concatenación después de normalización falló - usando filtro")
             # Fall through to concat filter on normalized clips
             # Continuar con filtro de concatenación en clips normalizados
             files = norm_files                                                  
@@ -346,10 +346,10 @@ def combine_videos():
         ]
         try:
             _run(cmd_fast)
-            print(f"[ok] concatenated -> {MERGED_OUT}")
+            print(f"Videos concatenated/ Videos concatenados: {MERGED_OUT}")
         return
         except RuntimeError:
-            print("[warn] fast concat failed; normalizing clips then retrying ...")
+            print("Fast concat failed - normalizing clips/ Concatenación rápida falló - normalizando clips")
             files = _normalize_clips(files)                                      
 
     # --- 3) Last resort: concat filter (re-encode once) ---
@@ -378,7 +378,7 @@ def combine_videos():
         str(MERGED_OUT),
     ]
     _run(cmd_concat_filter)
-    print(f"[ok] concatenated (concat filter) -> {MERGED_OUT}")
+    print(f"Videos concatenated with filter/ Videos concatenados con filtro: {MERGED_OUT}")
 
 
 # Adds background music to merged video or copies video without music if music file is missing
@@ -394,12 +394,12 @@ def add_music():
         raise FileNotFoundError("merged.mp4 not found. Run combine_videos() first.")
 
     if not MUSIC_IN.exists():
-        print("[warn] no downloaded music found; copying merged -> Final.mp4")
+        print("No music found - copying merged video/ No se encontró música - copiando video fusionado")
         WORKDIR.mkdir(parents=True, exist_ok=True)
         # Copy video without music if no music file available
         # Copiar video sin música si no hay archivo de música disponible
         FINAL_OUT.write_bytes(MERGED_OUT.read_bytes())
-        print(f"[ok] Final written: {FINAL_OUT}")
+        print(f"Final video saved/ Video final guardado: {FINAL_OUT}")
         return
 
     # Replace video audio with music track
@@ -418,6 +418,6 @@ def add_music():
         str(FINAL_OUT),
     ]
     _run(cmd)
-    print(f"[ok] music added -> {FINAL_OUT}")
+    print(f"Music added to video/ Música añadida al video: {FINAL_OUT}")
 
 

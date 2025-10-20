@@ -38,7 +38,7 @@ def download_image(url: str, index: int) -> Path:
     # Save with high quality JPEG compression
     # Guardar con compresión JPEG de alta calidad
     img.save(out, format="JPEG", quality=92)
-    print(f"[ok] image saved: {out}")
+    print(f"Image saved/ Imagen guardada: {out}")
     return out
 
 # Downloads music or video file from URL using streaming for large files and saves to work directory
@@ -56,5 +56,5 @@ def download_song(url: str) -> Path:
             for chunk in r.iter_content(chunk_size=1024 * 256):
                 if chunk:
                     f.write(chunk)
-    print(f"[ok] music saved: {out}")
+    print(f"Music saved/ Música guardada: {out}")
     return out

@@ -8,25 +8,28 @@ import time
 from pathlib import Path
 from config import workdir
 
-# API key setup - check environment variable first, then fallback to hardcoded
-# Configuración de clave API - verificar variable de entorno primero, luego respaldo codificado
-API_KEY = os.getenv("GOOGLE_API_KEY", "AIzaSyDP5q2gFxX6mOBpIFLai8yzBN50bE41OtE")
+# API key setup - get from environment variable only
+# Configuración de clave API - obtener solo de variable de entorno
+API_KEY = os.getenv("GOOGLE_API_KEY")
+
+
 
 # Only import and initialize if API key is set
 # Solo importar e inicializar si la clave API está configurada
-if API_KEY != "TYPE_KEY_HERE" and API_KEY:
+if API_KEY:
     try:
         from google import genai
         from google.genai import types
         # Initialize Google GenAI client with API key
         # Inicializar cliente de Google GenAI con clave API
         client = genai.Client(api_key=API_KEY)
-        print("[veo] API key loaded: yes")
+        print("API key loaded/ Clave API cargada: yes")
     except ImportError:
-        print("[veo] Google AI libraries not installed. Install with: pip install google-genai")
+        print("Google AI libraries not installed/ Librerías de Google AI no instaladas. Install with: pip install google-genai")
         client = None
 else:
-    print("[veo] API key not set - Google AI features disabled")
+    print("API key not set - Google AI features disabled/ Clave API no configurada - funciones de Google AI deshabilitadas")
+    print("Please set GOOGLE_API_KEY environment variable/ Por favor configure la variable de entorno GOOGLE_API_KEY")
     client = None
 
 
@@ -49,7 +52,7 @@ def calling_veo(prompt: str, image_path: str, index: int) -> Path:
         raise FileNotFoundError(f"Image not found: {p}")
 
     try:
-        print(f"[veo] Generating video for image {index}...")
+        print(f"Generating video for image {index}/ Generando video para imagen {index}")
         
         # Use the correct Veo API call based on your template
         # Usar la llamada correcta de API Veo basada en tu plantilla
@@ -64,13 +67,13 @@ def calling_veo(prompt: str, image_path: str, index: int) -> Path:
 
         # Wait for the video to be generated
         # Esperar a que el video sea generado
-        print(f"[veo] Waiting for video generation to complete...")
+        print("Waiting for video generation/ Esperando generación de video")
         while not operation.done:
             # Poll every 20 seconds for completion status
             # Consultar cada 20 segundos el estado de finalización
             time.sleep(20)
             operation = client.operations.get(operation)
-            print(f"[veo] Status: {operation}")
+            print(f"Generation status/ Estado de generación: {operation}")
 
         # Check if video generation was successful
         # Verificar si la generación de video fue exitosa
@@ -83,7 +86,7 @@ def calling_veo(prompt: str, image_path: str, index: int) -> Path:
         
         # Download the video file
         # Descargar el archivo de video
-        print(f"[veo] Downloading video...")
+        print("Downloading video/ Descargando video")
         video_bytes = client.files.download(file=generated_video.video)
         
         # Save to workdir
@@ -92,11 +95,11 @@ def calling_veo(prompt: str, image_path: str, index: int) -> Path:
         with open(out, "wb") as f:
             f.write(video_bytes)
 
-        print(f"[ok] Veo video saved: {out}")
+        print(f"AI video saved/ Video IA guardado: {out}")
         return out
         
     except Exception as e:
-        print(f"[warn] Veo API call failed: {e}. Creating dummy video for testing...")
+        print(f"API call failed - creating dummy video/ Llamada API falló - creando video ficticio: {e}")
         # Fallback: create dummy video
         # Respaldo: crear video dummy
         out = workdir / f"AIvideo{index}.mp4"
@@ -108,5 +111,5 @@ def calling_veo(prompt: str, image_path: str, index: int) -> Path:
             "-c:v", "libx264", "-preset", "fast", str(out)
         ]
         subprocess.run(cmd, check=True, capture_output=True)
-        print(f"[ok] Dummy video created: {out}")
+        print(f"Dummy video created/ Video ficticio creado: {out}")
         return out

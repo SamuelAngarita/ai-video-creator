@@ -25,12 +25,12 @@ def main():
     # Descargar todas las imágenes desde URLs especificadas en input.json
     for i, img in enumerate(data["images"]):
         download_image(img["url"], i+1)  # +1 so it starts at 1,...
-        print(f"IMAGE NUMER {i+1} HAS BEEN DOWNLOADED!!!!!!!!!!!!!!!")
+        print(f"Downloading image {i+1}/ Descargando imagen {i+1}")
 
     # Download background music from URL
     # Descargar música de fondo desde URL
     download_song(data["music"]["url"])
-    print("SONG DOWNLOADED!!!!!!!!!!!!!!!!!!!!!!!!111")
+    print("Downloading music/ Descargando música")
 
     # google_api.py calling main
     # Llamada principal de google_api.py
@@ -45,16 +45,16 @@ def main():
                 str(workdir / f"downloaded_image{y}.jpg"),
                 y
             )
-            print(f"[demo] success: {result}")
+            print(f"Video generated successfully/ Video generado exitosamente: {result}")
         except (TimeoutError, RuntimeError, SystemExit) as e:
             # Friendly, short messages only (no secrets, no long traces).
             # Mensajes amigables y cortos solamente (sin secretos, sin trazas largas).
-            print(f"[demo] error: {e}")
+            print(f"Video generation failed/ Fallo en generación de video: {e}")
 
     # Imagine AI videos have been downloaded as AIvideo1.mp4, AIvideo2.mp4, ...
     # Imaginar que los videos IA han sido descargados como AIvideo1.mp4, AIvideo2.mp4, ...
 
-    print("=== Pipeline start ===")
+    print("Starting video processing/ Iniciando procesamiento de video")
 
     # Check if ffmpeg is available before proceeding
     # Verificar si ffmpeg está disponible antes de continuar
@@ -62,20 +62,32 @@ def main():
 
     # Create concatenation list file for ffmpeg
     # Crear archivo de lista de concatenación para ffmpeg
-    print("[info] Creating list file...")
+    print("Creating video list/ Creando lista de videos")
     create_txt(len(data["images"]))  # example: builds mylist for N files AIvideo1/2/3.mp4
 
     # Concatenate all AI-generated videos into one merged video
     # Concatenar todos los videos generados por IA en un video fusionado
-    print("[info] Combining videos...")
+    print("Combining videos/ Combinando videos")
     combine_videos()
 
-    # Add background music to the merged video
-    # Agregar música de fondo al video fusionado
-    print("[info] Adding music onto merged video...")
-    add_music()
+    # Add background music to the merged video (if enabled)
+    # Agregar música de fondo al video fusionado (si está habilitado)
+    if data["music"]["enabled"]:
+        print("Adding background music/ Añadiendo música de fondo")
+        add_music()
+    else:
+        print("Music disabled - finalizing video/ Música deshabilitada - finalizando video")
+        # Rename merged.mp4 to Final.mp4 when music is disabled
+        # Renombrar merged.mp4 a Final.mp4 cuando la música está deshabilitada
+        import shutil
+        from pathlib import Path
+        merged_path = workdir / "merged.mp4"
+        final_path = workdir / "Final.mp4"
+        if merged_path.exists():
+            shutil.move(str(merged_path), str(final_path))
+            print(f"Final video saved/ Video final guardado: {final_path}")
 
-    print("=== Pipeline end ===")
+    print("Video processing complete/ Procesamiento de video completado")
 
 if __name__ == "__main__":
     main()
