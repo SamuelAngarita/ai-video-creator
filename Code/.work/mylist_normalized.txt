@@ -1,3 +1,0 @@
-file '/app/Code/.work/normalized/clip001.mp4'
-file '/app/Code/.work/normalized/clip002.mp4'
-file '/app/Code/.work/normalized/clip003.mp4'
