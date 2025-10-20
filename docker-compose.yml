@@ -18,7 +18,7 @@ services:
       - ./Code/.work:/app/Code/.work
       - ./Images:/app/Images:ro  # Mount images directory as read-only
       - ./Music:/app/Music:ro    # Mount music directory as read-only
-      - ./input.json:/app/input.json:ro  # Mount input.json as read-only
+      - ./Code/.work/input.json:/app/input.json:ro  # Mount input.json as read-only
     
     # Set environment variables
     # Establecer variables de entorno

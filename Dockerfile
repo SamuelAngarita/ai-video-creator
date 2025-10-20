@@ -40,6 +40,10 @@ RUN pip install --upgrade pip && \
 # Copy your project files into the container
 # Copiar archivos del proyecto al contenedor
 COPY Code/ /app/Code/
+COPY Images/ /app/Images/
+COPY Music/ /app/Music/
+COPY input.json /app/input.json
+COPY README.md /app/README.md
 
 # Create necessary directories and set permissions
 # Crear directorios necesarios y establecer permisos
