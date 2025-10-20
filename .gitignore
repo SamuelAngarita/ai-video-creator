@@ -116,7 +116,9 @@ dmypy.json
 
 # Project-specific ignores
 # Generated work files and outputs
-Code/.work/
+Code/.work/*
+# But allow input.json in the work directory
+!Code/.work/input.json
 *.mp4
 *.avi
 *.mov
