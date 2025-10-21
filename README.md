@@ -69,7 +69,7 @@ ai-video-creator/
 
 ### Step 4: Set Up Your API Key
 **On Windows:**
-1. Double-click `setup.bat` in the project folder
+1. Double-click `setup-env.bat` in the project folder
 2. Paste your API key when asked
 3. Press Enter
 
@@ -80,8 +80,8 @@ ai-video-creator/
 4. Paste your API key when asked
 
 **⚠️ IMPORTANT SECURITY NOTE:**
-- Never put your real API key in the `run.bat` or `run-docker.bat` files
-- These files contain placeholder text `your_google_api_key_here` - replace it with your actual key
+- Never put your real API key in the `run.bat` file
+- The `run.bat` file contains placeholder text `your_google_api_key_here` - replace it with your actual key
 - Your API key should only be set as an environment variable or through the setup scripts
 
 ### Step 5: Edit Your Video Settings
@@ -102,9 +102,9 @@ ai-video-creator/
 2. Double-click `run.bat` to run locally
 3. Your video will be saved as `Code/.work/Final.mp4`
 
-**Option C: Using Docker Batch File (Windows)**
-1. Edit `run-docker.bat` and replace `your_google_api_key_here` with your actual API key
-2. Double-click `run-docker.bat` to run with Docker
+**Option C: Using Setup Script + Docker (Easiest)**
+1. Run `setup-env.bat` to set up your API key
+2. Type: `docker-compose up --build`
 3. Your video will be saved as `Code/.work/Final.mp4`
 
 **That's it! You now have an AI-generated video! 🎉**
@@ -137,7 +137,7 @@ chmod +x setup.sh
 ./setup.sh
 
 # Windows
-setup.bat
+setup-env.bat
 ```
 
 **Option 2: Manual Setup**
@@ -192,7 +192,7 @@ Edit `Code/.work/input.json`:
 run.bat
 
 # OR for Docker:
-run-docker.bat
+docker-compose up --build
 ```
 
 ### Manual Commands
