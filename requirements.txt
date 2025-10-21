@@ -10,7 +10,7 @@ Pillow>=10.4.0
 
 # Google AI/GenAI libraries for Veo API
 # Bibliotecas de Google AI/GenAI para API Veo
-google-generativeai>=0.8.3
+google-genai>=0.8.0
 
 # Path and file handling (built-in, but listed for completeness)
 # Manejo de rutas y archivos (integrado, pero listado para completitud)

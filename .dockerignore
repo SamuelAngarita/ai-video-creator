@@ -71,7 +71,7 @@ docker-compose.yml
 Code/.work/*
 !Code/.work/input.json
 
-# Environment files
+# Environment files (we'll mount .env as volume)
 .env
 .env.local
 .env.*.local
@@ -83,13 +83,14 @@ tests/
 test_*.py
 
 # Large generated files that shouldn't be in build context
-*.mp4
-*.avi
-*.mov
-*.mkv
-*.webm
-*.wav
-*.mp3
+# But allow the original Images and Music directories
+# *.mp4
+# *.avi
+# *.mov
+# *.mkv
+# *.webm
+# *.wav
+# *.mp3
 
 # Backup files
 *.bak
