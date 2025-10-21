@@ -42,7 +42,6 @@ RUN pip install --upgrade pip && \
 COPY Code/ /app/Code/
 COPY Images/ /app/Images/
 COPY Music/ /app/Music/
-COPY input.json /app/input.json
 COPY README.md /app/README.md
 
 # Create necessary directories and set permissions

@@ -166,7 +166,7 @@ Icon
 *~
 
 # Docker
-.dockerignore
+# .dockerignore  # Commented out - we want to track this file
 
 # API keys and sensitive data
 .env.local
